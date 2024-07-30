@@ -4,11 +4,11 @@ from selenium.common.exceptions import TimeoutException
 from mobile_project.utils.logger import configure_logging
 
 
-class WaitUtils:
-    def __init__(self, driver, timeout=10, log_file=None):
+class SingleElementWaitUtils:
+    def __init__(self, driver, timeout=10):
         self.driver = driver
         self.timeout = timeout
-        self.logger = configure_logging(log_file=log_file)
+        self.logger = configure_logging()
 
     def wait_for_element(self, locator, timeout=None):
         timeout = timeout or self.timeout

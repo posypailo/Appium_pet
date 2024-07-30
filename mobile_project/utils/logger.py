@@ -1,24 +1,40 @@
 import logging
 
 
-def configure_logging(level=logging.INFO, log_file=None):
-    logger = logging.getLogger()
-    logger.setLevel(level)
+class SingletonLogger:
+    _instance = None
 
-    ch = logging.StreamHandler()
-    ch.setLevel(level)
+    def __new__(cls, log_file='app.log'):
+        if cls._instance is None:
+            cls._instance = super(SingletonLogger, cls).__new__(cls)
+            cls._instance._init_logger(log_file)
+        return cls._instance
 
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    def _init_logger(self, log_file):
+        self.logger = logging.getLogger('app_logger')
+        self.logger.setLevel(logging.DEBUG)
 
-    ch.setFormatter(formatter)
-
-    logger.addHandler(ch)
-
-    # If log_file is specified, create file handler and add it to logger
-    if log_file:
+        # File handler
         fh = logging.FileHandler(log_file)
-        fh.setLevel(level)
-        fh.setFormatter(formatter)
-        logger.addHandler(fh)
+        fh.setLevel(logging.DEBUG)
 
-    return logger
+        # Console handler
+        ch = logging.StreamHandler()
+        ch.setLevel(logging.INFO)
+
+        # Formatter
+        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        fh.setFormatter(formatter)
+        ch.setFormatter(formatter)
+
+        # Adding handlers to logger
+        self.logger.addHandler(fh)
+        self.logger.addHandler(ch)
+
+    def get_logger(self):
+        return self.logger
+
+
+def configure_logging():
+    logger_instance = SingletonLogger()
+    return logger_instance.get_logger()

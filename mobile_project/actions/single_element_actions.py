@@ -1,13 +1,13 @@
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, TimeoutException
-from mobile_project.utils.wait_utils import WaitUtils
+from mobile_project.utils.single_element_wait_utils import SingleElementWaitUtils
 from mobile_project.utils.logger import configure_logging
 
 
 class SingleElementActions:
-    def __init__(self, driver, wait_utils=None, log_file=None):
+    def __init__(self, driver):
         self.driver = driver
-        self.wait_utils = wait_utils or WaitUtils(driver)
-        self.logger = configure_logging(log_file=log_file)
+        self.wait_utils = SingleElementWaitUtils(driver)
+        self.logger = configure_logging()
 
     def is_displayed(self, locator, timeout=10):
         try:
@@ -47,3 +47,11 @@ class SingleElementActions:
         except (NoSuchElementException, StaleElementReferenceException, TimeoutException) as e:
             self.logger.error(f"Element {locator} is not selected. Exception: {e}")
             return False
+
+    def click(self, locator, timeout=10):
+        try:
+            element = self.wait_utils.wait_for_element_to_be_clickable(locator, timeout)
+            element.click()
+            self.logger.info(f"Clicked on element with locator {locator}.")
+        except (NoSuchElementException, StaleElementReferenceException, TimeoutException) as e:
+            self.logger.error(f"Error clicking on element with locator {locator}. Exception: {e}")
