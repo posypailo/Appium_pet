@@ -1,7 +1,7 @@
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
-from mobile_project.utils.logger import configure_logging
+from slashdot.utils.logger import configure_logging
 from slashdot.constants.global_data import DEFAULT_TIMEOUT
 
 

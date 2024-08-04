@@ -1,7 +1,6 @@
 import logging
 import os
 
-
 class SingletonLogger:
     _instance = None
 
@@ -15,29 +14,53 @@ class SingletonLogger:
         self.logger = logging.getLogger('app_logger')
 
         # Define the project root directory
-        project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+        project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'slashdot'))
         log_file_path = os.path.join(project_root, log_file)
-        print(log_file_path)
+        print(f"Calculated log file path: {log_file_path}")
 
-        if not self.logger.hasHandlers():
-            self.logger.setLevel(logging.DEBUG)
+        print("Setting up logger handlers.")
+        self.logger.setLevel(logging.DEBUG)
 
-            fh = logging.FileHandler(log_file_path, mode='w')
-            fh.setLevel(logging.DEBUG)
+        ch = logging.StreamHandler()
+        ch.setLevel(logging.INFO)
 
-            ch = logging.StreamHandler()
-            ch.setLevel(logging.INFO)
+        fh = logging.FileHandler(log_file_path, mode='w')
+        fh.setLevel(logging.DEBUG)
 
-            formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-            fh.setFormatter(formatter)
-            ch.setFormatter(formatter)
+        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        ch.setFormatter(formatter)
+        fh.setFormatter(formatter)
 
-            self.logger.addHandler(fh)
-            self.logger.addHandler(ch)
+        self.logger.addHandler(ch)
+        self.logger.addHandler(fh)
+        print("Logger handlers added.")
+        for handler in self.logger.handlers:
+            print(f"Handler: {handler}, Level: {handler.level}, Formatter: {handler.formatter}")
+
+        # if not self.logger.hasHandlers():
+        #     print("Setting up logger handlers.")
+        #     self.logger.setLevel(logging.DEBUG)
+        #
+        #     ch = logging.StreamHandler()
+        #     ch.setLevel(logging.INFO)
+        #
+        #     fh = logging.FileHandler(log_file_path, mode='w')
+        #     fh.setLevel(logging.DEBUG)
+        #
+        #     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        #     ch.setFormatter(formatter)
+        #     fh.setFormatter(formatter)
+        #
+        #     self.logger.addHandler(ch)
+        #     self.logger.addHandler(fh)
+        #     print("Logger handlers added.")
+        # else:
+        #     print("Logger already has handlers. Skipping setup.")
+        #     for handler in self.logger.handlers:
+        #         print(f"Handler: {handler}, Level: {handler.level}, Formatter: {handler.formatter}")
 
     def get_logger(self):
         return self.logger
-
 
 def configure_logging():
     logger_instance = SingletonLogger()
