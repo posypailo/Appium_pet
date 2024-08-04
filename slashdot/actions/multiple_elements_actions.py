@@ -12,19 +12,28 @@ class MultipleElementActions:
     def are_elements_displayed(self, locator, timeout=DEFAULT_TIMEOUT):
         elements = self.elements_utils.get_elements(locator, timeout)
         all_displayed = all(element.is_displayed() for element in elements)
-        self.logger.info(f"All elements {locator} are displayed: {all_displayed}")
+        if all_displayed:
+            self.logger.info(f"All elements {locator} are displayed: {all_displayed}")
+        else:
+            self.logger.warning(f"Not all elements {locator} are displayed.")
         return all_displayed
 
     def are_elements_enabled(self, locator, timeout=DEFAULT_TIMEOUT):
         elements = self.elements_utils.get_elements(locator, timeout)
         all_enabled = all(element.is_enabled() for element in elements)
-        self.logger.info(f"All elements {locator} are enabled: {all_enabled}")
+        if all_enabled:
+            self.logger.info(f"All elements {locator} are enabled: {all_enabled}")
+        else:
+            self.logger.warning(f"Not all elements {locator} are enabled.")
         return all_enabled
 
     def are_elements_selected(self, locator, timeout=DEFAULT_TIMEOUT):
         elements = self.elements_utils.get_elements(locator, timeout)
         all_selected = all(element.is_selected() for element in elements)
-        self.logger.info(f"All elements {locator} are selected: {all_selected}")
+        if all_selected:
+            self.logger.info(f"All elements {locator} are selected: {all_selected}")
+        else:
+            self.logger.warning(f"Not all elements {locator} are selected.")
         return all_selected
 
     def perform_action_on_elements(self, locator, action, timeout=DEFAULT_TIMEOUT):
