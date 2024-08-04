@@ -1,4 +1,4 @@
-from mobile_project.pages.base_page import BasePage
+from slashdot.pages.base_page import BasePage
 from appium.webdriver.common.appiumby import AppiumBy
 from mobile_project.actions.single_element_actions import SingleElementActions
 from mobile_project.actions.multiple_elements_actions import MultipleElementActions

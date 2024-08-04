@@ -18,14 +18,18 @@ class MultipleElementsWaitUtils:
             return elements
         except TimeoutException as e:
             self.logger.error(f"Timeout while waiting for elements with locator {locator}. Exception: {e}")
-            return []
+            raise
 
     def wait_for_elements_to_be_present(self, locator, timeout=None):
         timeout = timeout or self.default_timeout
         try:
-            WebDriverWait(self.driver, timeout).until(lambda x: len(x.find_elements(*locator)) > 0)
-            self.logger.info(f"Elements are present with locator {locator}.")
-            return True
+            elements = WebDriverWait(self.driver, timeout).until(lambda x: x.find_elements(*locator))
+            if len(elements) > 0:
+                self.logger.info(f"Elements are present with locator {locator}.")
+                return elements
+            else:
+                self.logger.error(f"No elements found with locator {locator} within the timeout period.")
+                raise TimeoutException(f"No elements found with locator {locator} within the timeout period.")
         except TimeoutException as e:
             self.logger.error(f"Timeout while waiting for elements with locator {locator}. Exception: {e}")
-            return False
+            raise
